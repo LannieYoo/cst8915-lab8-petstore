@@ -56,55 +56,6 @@ Purple is on my computer. Blue is the setup on Azure. Green is the app running.
 
 ---
 
-## The Pet Store on AKS
-
-```mermaid
-%%{init: {"flowchart": {"nodeSpacing": 25, "rankSpacing": 45, "padding": 6, "wrappingWidth": 480}, "themeVariables": {"fontSize": "14px"}}}%%
-flowchart LR
-    U(["Browser"])
-    subgraph AKS["AKS cluster"]
-        SF["<b>store-front</b><br/>LoadBalancer"]
-        SA["<b>store-admin</b><br/>LoadBalancer"]
-        OS["<b>order-service</b>"]
-        PS["<b>product-service</b>"]
-        MS["<b>makeline-service</b>"]
-        AI["<b>ai-service</b><br/>keys from 2 Secrets"]
-        MQ[("<b>rabbitmq-0</b><br/>StatefulSet<br/>plugins from ConfigMap")]
-        DB[("<b>mongodb-0</b><br/>StatefulSet")]
-        VC["<b>virtual-customer</b>"]
-        VW["<b>virtual-worker</b>"]
-    end
-    OAI(["OpenAI"])
-    U --> SF
-    U --> SA
-    SF -->|"/order"| OS
-    SF -->|"/products"| PS
-    SA -->|"/products, /ai"| PS
-    SA -->|"/makeline/order"| MS
-    PS --> AI
-    AI --> OAI
-    OS -->|"order message"| MQ
-    MQ -->|"fetch"| MS
-    MS --> DB
-    VC -->|"new orders"| OS
-    VW -->|"complete orders"| MS
-    classDef web fill:#E3F0FC,stroke:#0078D4,stroke-width:2px,color:#0B2A4A
-    classDef data fill:#FDE8E8,stroke:#C92A2A,stroke-width:2px,color:#5C1010
-    classDef sim fill:#FFF1E0,stroke:#D9480F,stroke-width:2px,color:#4A1F00
-    classDef outside fill:#FFFFFF,stroke:#555555,stroke-width:2px,color:#222222
-    class SF,SA,OS,PS,MS,AI web
-    class MQ,DB data
-    class VC,VW sim
-    class U,OAI outside
-    style AKS fill:#F7FBFF,stroke:#0078D4,stroke-dasharray:4 3,color:#0B2A4A
-```
-
-- Only `store-front` and `store-admin` have a public IP. The other services are `ClusterIP`, so they are only inside the cluster.
-- The blue services keep no data. The red ones, `rabbitmq` and `mongodb`, keep the orders.
-- The orange ones are the simulators from `admin-tasks.yaml`.
-
----
-
 ## Task 1: My Docker Images
 
 | Service | My fork | My image | File |
