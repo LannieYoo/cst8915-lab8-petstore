@@ -29,7 +29,7 @@ flowchart TB
     B["<b>2. Update the YAML files</b><br/>aps-all-in-one-Task1.yaml: 6 images<br/>admin-tasks.yaml: 2 images"]
     C["<b>3. Create the AKS cluster</b><br/>2 node pools, 1 node each"]
     D["<b>4. Deploy</b><br/>ConfigMap, 2 Secrets<br/>2 StatefulSets, 6 Deployments"]
-    E["<b>5. Use the app</b><br/>order in Store Front<br/>complete it in Store Admin<br/>AI description and image"]
+    E["<b>5. Use the app</b><br/>order in Store Front<br/>complete an order in Store Admin<br/>AI description and image"]
     F["<b>6. Simulate, scale, check</b><br/>virtual customer and worker<br/>order-service: 3 pods<br/>RabbitMQ UI, MongoDB shell"]
     A --> B --> C --> D --> E --> F
     classDef local fill:#F3F0FF,stroke:#6741D9,stroke-width:2px,color:#2B1A66
@@ -71,6 +71,7 @@ Purple is on my computer. Blue is the setup on Azure. Green is the app running.
 
 - MongoDB (`mongo:8.0.38`) and RabbitMQ (`rabbitmq:3-management`) use the official images.
 - I checked the running images with `kubectl get deployments -o custom-columns=NAME:.metadata.name,IMAGE:.spec.template.spec.containers[0].image`. All six show `lannieyoo/...:lab8`.
+- The two simulators show `lannieyoo/virtual-customer:lab8` and `lannieyoo/virtual-worker:lab8`.
 
 ---
 
@@ -112,7 +113,7 @@ flowchart LR
 - **What problem it solves**:
   - The orders are saved outside my cluster, so they are not lost when the MongoDB pod is deleted.
   - Azure handles backup, updates, and scaling. I do not need to do this myself.
-  - The database is not open without access control.
+  - The database always needs a key or a login. It is not open to everyone.
 
 ### 2. RabbitMQ → Azure Service Bus
 
